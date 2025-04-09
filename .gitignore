@@ -1,0 +1,37 @@
+# === Автогенерируемые папки ===
+**/node_modules/  # Игнорирует node_modules во всех подпапках
+dist/             # Папка сборки (если используется)
+.cache/           # Кэш Vite/ESLint/etc
+.temp/            # Временные файлы
+
+# === Файлы окружения и ключи ===
+.env              # Локальные переменные (конфиденциально!)
+.env.local        
+.env.*.local      
+
+# === IDE и редакторы ===
+.vscode/          # Настройки VS Code
+.idea/            # Настройки JetBrains IDE
+*.suo             
+*.ntvs*          
+
+# === Системные файлы ===
+.DS_Store         # macOS
+Thumbs.db         # Windows
+desktop.ini       # Windows
+
+# === Логи и кэш пакетов ===
+npm-debug.log*    
+yarn-debug.log*   
+yarn-error.log*   
+.pnpm-debug.log*  
+
+# === Lock-файлы (можно раскомментировать, если не хотите их в Git) ===
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# === Другое ===
+*.tmp             
+*.bak             
+*.swp             
