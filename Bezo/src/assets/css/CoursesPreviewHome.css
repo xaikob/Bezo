@@ -1,0 +1,83 @@
+.courses-preview {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.courses-preview h2 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 20px;
+  max-width: 1200px; /* Ограничиваем максимальную ширину */
+  margin: 0 auto; /* Центрируем сам грид */
+}
+
+.course-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.course-image {
+  width: 100%;
+  border-radius: 100px;
+  height: 200px;
+  object-fit: cover;
+}
+
+.course-info {
+  padding: 20px;
+}
+
+.course-info h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.course-description {
+  font-size: 16px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.see-all {
+  margin-top: 30px;
+}
+
+.see-all .btn-secondary {
+  padding: 12px 25px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+}
+
+.see-all .btn-secondary:hover {
+  background-color: #0056b3;
+}
+
+/* Адаптивность */
+/* @media (max-width: 768px) {
+  .courses-preview h2 {
+    font-size: 28px;
+  }
+
+  .course-card {
+    margin-bottom: 20px;
+  }
+} */

@@ -35,3 +35,8 @@ yarn-error.log*
 *.tmp             
 *.bak             
 *.swp             
+.DS_Store
+Bezo/node_modules
+bezo-backend/node_modules
+bezo-backend/.env
+Bezo/.vscode
