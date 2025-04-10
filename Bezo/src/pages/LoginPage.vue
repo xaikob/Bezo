@@ -21,7 +21,7 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import NavBar from './NavBar.vue'
+import NavBar from '@/components/layout/NavBar.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -32,24 +32,18 @@ const formData = ref({
 })
 
 const handleSubmit = async (e) => {
-  e.preventDefault()  // Останавливаем стандартное поведение формы (перезагрузку страницы)
-
+  e.preventDefault();
   try {
     const response = await axios.post('http://localhost:5174/api/auth/login', {
       email: formData.value.email,
       password: formData.value.password
-    })
-
-    // Сохраняем токен в localStorage
-    localStorage.setItem('token', response.data.token)
-
-    // После успешного логина перенаправляем пользователя
-    router.push('/')
+    });
+    localStorage.setItem('token', response.data.token);
+    router.push('/');
   } catch (error) {
-    console.error('Ошибка при входе:', error.response?.data || error.message)
-    alert('Неверный email или пароль!')
+    alert("Ошибка: " + (error.response?.data?.message || error.message));
   }
-}
+};
 </script>
 
 

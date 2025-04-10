@@ -1,17 +1,34 @@
 import express from 'express'
-import Course from '../models/Course.js'
+import { supabase } from '../supabaseClient.js'
 
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-  const courses = await Course.find()
-  res.json(courses)
+  try {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+    
+    if (error) throw error
+    res.json(data)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 router.post('/', async (req, res) => {
-  const course = new Course(req.body)
-  await course.save()
-  res.status(201).json(course)
+  try {
+    const { data, error } = await supabase
+      .from('courses')
+      .insert([req.body])
+      .select()
+    
+    if (error) throw error
+    res.status(201).json(data[0])
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
+// Добавьте default export
 export default router

@@ -1,20 +1,36 @@
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import { supabase } from '../supabaseClient.js'
 
 dotenv.config()
 
-export const protect = (req, res, next) => {
-  const token = req.headers.authorization && req.headers.authorization.split(' ')[1]
+export const protect = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]
 
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' })
+    return res.status(401).json({ message: 'Authentication required' })
   }
 
   try {
+    // Вариант 1: Проверка JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = decoded.userId
+    
+    // Проверяем пользователя в Supabase
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', decoded.userId)
+      .single()
+
+    if (error || !user) {
+      return res.status(401).json({ message: 'User not found' })
+    }
+
+    req.user = user
     next()
+
   } catch (err) {
-    res.status(401).json({ message: 'Token is not valid' })
+    console.error('Auth error:', err)
+    res.status(401).json({ message: 'Invalid or expired token' })
   }
 }
