@@ -12,6 +12,7 @@ npm install
 ### Начало разработки/доработки проекта (Front)
 
 ```sh
+cd Bezo
 npm run dev
 ```
 ### Включение сервера (Back)
