@@ -3,63 +3,104 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
-import authRoutes from './routes/authRoutes.js'
+import { createClient } from '@supabase/supabase-js'
 
 // Конфигурация .env
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 dotenv.config({ path: path.join(__dirname, '.env') })
 
-// Проверка переменных окружения (можно удалить после настройки)
-console.log('Проверка окружения:')
-console.log('Supabase URL:', process.env.SUPABASE_URL ? '✔️' : '❌')
-console.log('Supabase Key:', process.env.SUPABASE_KEY ? '✔️' : '❌')
-console.log('JWT Secret:', process.env.JWT_SECRET ? '✔️' : '❌')
+// Явная проверка переменных окружения
+console.log('=== Проверка окружения ===')
+console.log('Supabase URL:', process.env.SUPABASE_URL || '❌ Отсутствует')
+console.log('Supabase Key:', process.env.SUPABASE_KEY ? '✔️ (скрыто)' : '❌ Отсутствует')
 
-// Инициализация Express
+// Инициализация Supabase с дополнительной проверкой
+let supabase
+try {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
+      }
+    }
+  )
+  console.log('✅ Supabase клиент инициализирован')
+} catch (err) {
+  console.error('❌ Ошибка инициализации Supabase:', err)
+  process.exit(1)
+}
+
 const app = express()
 
-// Middleware
+// Упрощённый CORS для тестирования
 app.use(cors({
-  origin: 'http://localhost:5173',
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
+  origin: '*',
+  methods: '*'
 }))
+
 app.use(express.json())
 
-// Тестовый маршрут
-app.get('/api/test', (req, res) => {
-  res.json({ 
-    message: 'Backend работает!',
-    envCheck: {
-      supabaseUrl: !!process.env.SUPABASE_URL,
-      supabaseKey: !!process.env.SUPABASE_KEY,
-      jwtSecret: !!process.env.JWT_SECRET
-    }
-  })
+// Логирование всех входящих запросов
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`)
+  next()
 })
 
-// Подключение роутов
-app.use('/api/auth', authRoutes)
+// Тестовый маршрут
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Сервер работает!' })
+})
 
-// Защищенный маршрут для теста аутентификации
-app.get('/api/protected', (req, res) => {
-  // Временный тест - позже замените на настоящий middleware
-  const token = req.headers.authorization?.split(' ')[1]
-  if (!token) {
-    return res.status(401).json({ message: 'Требуется аутентификация' })
+// Роут для курсов (упрощённая версия)
+app.get('/api/courses', async (req, res) => {
+  console.log('Запрос к /api/courses начал обработку')
+  
+  try {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .limit(10)
+
+    console.log('Результат запроса к Supabase:', { data, error })
+
+    if (error) {
+      console.error('Ошибка Supabase:', error)
+      return res.status(500).json({ 
+        error: 'Database Error',
+        details: error.message 
+      })
+    }
+
+    if (!data || data.length === 0) {
+      console.warn('Получен пустой массив курсов')
+      return res.status(200).json([])
+    }
+
+    res.json(data)
+  } catch (err) {
+    console.error('Неожиданная ошибка:', err)
+    res.status(500).json({ 
+      error: 'Internal Server Error',
+      details: err.message 
+    })
   }
-  res.json({ message: 'Доступ к защищенным данным разрешен' })
 })
 
 // Обработка 404
 app.use((req, res) => {
+  console.warn(`Маршрут не найден: ${req.method} ${req.path}`)
   res.status(404).json({ message: 'Маршрут не найден' })
 })
 
 // Запуск сервера
 const PORT = process.env.PORT || 5174
 app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`)
-  console.log(`➡️  Тестовый запрос: http://localhost:${PORT}/api/test`)
+  console.log(`\n🚀 Сервер запущен на http://localhost:${PORT}`)
+  console.log('Доступные маршруты:')
+  console.log(`- GET /api/hello`)
+  console.log(`- GET /api/courses\n`)
 })

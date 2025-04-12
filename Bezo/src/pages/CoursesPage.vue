@@ -1,11 +1,11 @@
 <template>
-  <NavBar/>
+  <NavBar />
   <div class="courses-page">
     <aside class="filter-sidebar">
       <h2>Фильтр</h2>
       <div class="filter-group">
         <label>Категория:</label>
-        <select>
+        <select v-model="selectedLevel">
           <option value="">Все</option>
           <option value="beginner">Начальный</option>
           <option value="intermediate">Средний</option>
@@ -14,7 +14,7 @@
       </div>
       <div class="filter-group">
         <label>Продолжительность:</label>
-        <select>
+        <select v-model="selectedDuration">
           <option value="">Любая</option>
           <option value="short">До 2 часов</option>
           <option value="medium">2–5 часов</option>
@@ -26,46 +26,64 @@
     <main class="course-list">
       <h1>Наши курсы</h1>
       <div class="courses-grid">
-        <CourseCard
-          v-for="course in courses"
-          :key="course.id"
-          :course="course"
-        />
+        <CourseCard v-for="course in filteredCourses" :key="course.id" :course="course" />
       </div>
     </main>
   </div>
 </template>
 
 <script setup>
-import NavBar from '@/components/layout/NavBar.vue';
+import { ref, onMounted, computed } from 'vue'
+import NavBar from '@/components/layout/NavBar.vue'
 import CourseCard from '@/components/ui/CourseCard.vue'
 
-const courses = [
-  {
-    id: 1,
-    title: 'Введение в кибербезопасность',
-    author: 'Иван Иванов',
-    rating: 4.8,
-    duration: '3 часа'
-  },
-  {
-    id: 2,
-    title: 'Этика хакеров и тестирование на проникновение',
-    author: 'Анна Смирнова',
-    rating: 4.5,
-    duration: '5.5 часов'
-  },
-  {
-    id: 3,
-    title: 'Безопасность веб-приложений',
-    author: 'Дмитрий К.',
-    rating: 2.9,
-    duration: '2.5 часа'
+// Состояния
+const courses = ref([])
+const isLoading = ref(false)
+const error = ref(null)
+const selectedLevel = ref('')
+const selectedDuration = ref('')
+
+// Загрузка курсов через бекенд
+const fetchCourses = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+
+    const response = await fetch('http://localhost:5174/api/courses')
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    courses.value = data
+  } catch (err) {
+    console.error('Ошибка загрузки курсов:', err)
+    error.value = 'Не удалось загрузить курсы. Попробуйте позже.'
+  } finally {
+    isLoading.value = false
   }
-  // Добавь больше курсов при необходимости
-]
+}
+
+// Фильтрация курсов (оставляем без изменений)
+const filteredCourses = computed(() => {
+  return courses.value.filter(course => {
+    const levelMatch = !selectedLevel.value || course.level === selectedLevel.value
+    const hours = parseFloat(course.duration) || 0
+    let durationMatch = true
+    switch (selectedDuration.value) {
+      case 'short': durationMatch = hours <= 2; break
+      case 'medium': durationMatch = hours > 2 && hours <= 5; break
+      case 'long': durationMatch = hours > 5; break
+    }
+    return levelMatch && durationMatch
+  })
+})
+
+onMounted(fetchCourses)
 </script>
 
 <style scoped>
-@import '../assets/css/CoursePage';
+@import '@/assets/css/CoursePage.css';
 </style>

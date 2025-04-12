@@ -3,32 +3,23 @@ import { supabase } from '../supabaseClient.js'
 
 const router = express.Router()
 
+// Получение всех курсов
 router.get('/', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('courses')
       .select('*')
+      .order('rating', { ascending: false })
     
     if (error) throw error
     res.json(data)
   } catch (err) {
-    res.status(500).json({ error: err.message })
+    console.error('Ошибка получения курсов:', err)
+    res.status(500).json({ 
+      error: 'Ошибка сервера',
+      details: err.message 
+    })
   }
 })
 
-router.post('/', async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from('courses')
-      .insert([req.body])
-      .select()
-    
-    if (error) throw error
-    res.status(201).json(data[0])
-  } catch (err) {
-    res.status(500).json({ error: err.message })
-  }
-})
-
-// Добавьте default export
 export default router

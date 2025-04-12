@@ -4,8 +4,10 @@
       <h1>Добро пожаловать в онлайн школу информационной безопасности</h1>
       <p>Изучайте лучшие курсы по защите информации с опытными преподавателями и практическими заданиями.</p>
       <div class="hero-buttons">
-        <a href="#courses" class="btn-primary">Посмотреть курсы</a>
-        <a href="#about" class="btn-secondary">О школе</a>
+        <router-link to="/courses"><a class="btn-primary">Посмотреть курсы</a></router-link>
+        <!-- <a href="#courses" class="btn-primary">Посмотреть курсы</a> -->
+        <router-link to="/about"><a class="btn-secondary">О школе</a></router-link>
+        <!-- <a href="#about" class="btn-secondary">О школе</a> -->
       </div>
     </div>
     <div class="hero-image">
