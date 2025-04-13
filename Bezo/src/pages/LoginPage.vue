@@ -1,16 +1,16 @@
 <template>
-  <NavBar/>
+  <NavBar />
   <div class="formCard">
     <form class="form" @submit="handleSubmit">
       <p class="title">Войти </p>
       <p class="message">Снова рады вас видеть. </p>
       <label>
-        <input v-model="formData.email" required="true" placeholder="" type="email" class="input">
+        <input v-model="email" required="true" placeholder="" type="email" class="input">
         <span>Email</span>
       </label>
 
       <label>
-        <input v-model="formData.password" required="true" placeholder="" type="password" class="input">
+        <input v-model="password" required="true" placeholder="" type="password" class="input">
         <span>Пароль...</span>
       </label>
       <button type="submit" class="submit">Войти</button>
@@ -20,30 +20,43 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
 import NavBar from '@/components/layout/NavBar.vue'
+import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
+const email = ref('')
+const password = ref('')
+
+const userStore = useUserStore()
 const router = useRouter()
 
-const formData = ref({
-  email: '',
-  password: ''
-})
-
 const handleSubmit = async (e) => {
-  e.preventDefault();
+  e.preventDefault()
+
   try {
-    const response = await axios.post('http://localhost:5174/api/auth/login', {
-      email: formData.value.email,
-      password: formData.value.password
-    });
-    localStorage.setItem('token', response.data.token);
-    router.push('/');
-  } catch (error) {
-    alert("Ошибка: " + (error.response?.data?.message || error.message));
+    const res = await axios.post('http://localhost:5174/api/auth/login', {
+      email: email.value,
+      password: password.value
+    })
+
+    const { user, token } = res.data
+
+    if (user && token) {
+      userStore.setUser({
+        userId: user.id,
+        username: user.first_name || user.email.split('@')[0]
+      })
+      localStorage.setItem('token', token) // Сохраняем токен
+      router.push('/user')
+    } else {
+      console.error('Нет данных пользователя в ответе:', res.data)
+    }
+  } catch (err) {
+    console.error('Ошибка при входе:', err.response?.data || err.message)
+    alert(err.response?.data?.message || 'Ошибка при входе')
   }
-};
+}
 </script>
 
 

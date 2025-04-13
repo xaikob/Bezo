@@ -1,16 +1,17 @@
 <template>
   <header class="header">
     <div class="logo" @click="$router.push('/')">
-      <img class="logo_img" src="/src/assets/img/logo.svg" alt="Logo">
+      <img class="logo_img" src="/src/assets/img/logo.svg" alt="Logo" />
       <span>Bezo</span>
     </div>
 
     <nav class="nav">
-      <ul class='desctopNav'>
+      <ul class="desctopNav">
         <li><router-link to="/about">О школе</router-link></li>
         <li><router-link to="/courses">Курсы</router-link></li>
         <li><router-link to="/contact">Контакты</router-link></li>
-        <li><router-link to="/registrate"><img class='userLogo' src='/src/assets/img/userAvatar.svg' alt='User'></router-link></li>
+        <li><router-link :to="userStore.isLoggedIn ? '/user' : '/registrate'"><img class="userLogo" src="/src/assets/img/userAvatar.svg" alt="User" /></router-link></li>
+        <button v-if="userStore.isLoggedIn" @click="logout">Выйти</button>
       </ul>
     </nav>
 
@@ -31,10 +32,18 @@
   </header>
 </template>
 
-
 <script setup>
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
 
+const userStore = useUserStore()
+const router = useRouter()
+
+const logout = () => {
+  userStore.logout()
+  router.push('/login')
+}
 // Состояние для отображения меню на мобильных устройствах
 const menuOpen = ref(false)
 

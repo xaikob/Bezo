@@ -100,11 +100,12 @@ router.post(
       res.json({
         message: 'Вход выполнен успешно',
         user: {
-          ...userProfile,
-          email: data.user.email, // Используем email из auth, а не из public.users
+          id: data.user.id,
+          email: data.user.email,
+          first_name: userProfile.first_name,
+          last_name: userProfile.last_name
         },
-        token,
-        session: data.session,
+        token: token
       })
 
     } catch (error) {
