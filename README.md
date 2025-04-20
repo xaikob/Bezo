@@ -1,5 +1,5 @@
 # Bezo
-Клон степика с курсами по информационной безопасности. С использованием backednd-Postgres
+Клон степика и TryHackMe с курсами по информационной безопасности. С использованием backednd-Postgres
 
 ## Начало наботы
 
@@ -24,4 +24,8 @@ JWT_SECRET= .....
 ```sh
 cd bezo-backend
 node --env-file=.env server.js
+```
+### Если встречаются проблемы с npm следует переустановить пакеты
+```sh
+rm -rf node_modules package-lock.json && npm install && npm run dev
 ```

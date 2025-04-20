@@ -6,6 +6,7 @@ import LoginPage from '@/pages/LoginPage.vue'
 import AboutPage from '@/pages/AboutPage.vue'
 import ContactPage from '@/pages/ContactPage.vue'
 import UserPage from '@/pages/UserPage.vue'
+// import SQLInjectionn from '@/pages/SQLInjectionn.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +38,11 @@ const router = createRouter({
     {
       path: '/user',
       component: UserPage
-    }
+    },
+    // {
+    //   path: '/sql',
+    //   component: SQLInjectionn
+    // }
   ],
 })
 
