@@ -6,7 +6,8 @@ import LoginPage from '@/pages/LoginPage.vue'
 import AboutPage from '@/pages/AboutPage.vue'
 import ContactPage from '@/pages/ContactPage.vue'
 import UserPage from '@/pages/UserPage.vue'
-import SQLInjectionn from '@/pages/SQLInjectionn.vue'
+import SQLInjection from '@/pages/SQLInjection.vue'
+import SQLLab from '@/pages/SQLLab.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,7 +42,11 @@ const router = createRouter({
     },
     {
       path: '/sql',
-      component: SQLInjectionn
+      component: SQLInjection
+    },
+    {
+      path: '/sqll',
+      component: SQLLab
     }
   ],
 })

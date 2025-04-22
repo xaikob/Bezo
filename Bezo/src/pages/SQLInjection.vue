@@ -1,161 +1,165 @@
 <template>
-  <div class="sql-lab">
-    <h2>Лаборатория SQL-инъекций</h2>
+  <NavBar />
+  <div class="sql-course">
+    <header class="course-header">
+      <h1>{{ courseMeta.title }}</h1>
+      <p class="course-description">{{ courseMeta.description }}</p>
+      <div class="course-meta">
+        <span class="difficulty">{{ courseMeta.difficulty }}</span>
+        <span class="duration">{{ courseMeta.duration }}</span>
+      </div>
+    </header>
 
-    <div class="terminal">
-      <div v-for="(log, index) in logs" :key="index" class="log-entry">
-        {{ log }}
-      </div>
-      <div class="input-line">
-        <span class="prompt">SQL&gt;</span>
-        <input
-          v-model="currentCommand"
-          @keyup.enter="executeCommand"
-          placeholder="Введите SQL-запрос"
-        />
-      </div>
+    <div class="progress-container">
+      <div class="progress-bar" :style="{ width: progress + '%' }"></div>
+      <span class="progress-text">Прогресс ({{ progress }}%)</span>
     </div>
 
-    <div class="tutorial-section">
-      <h3>Примеры для тестирования:</h3>
-      <button @click="loadExample(1)">Простая инъекция</button>
-      <button @click="loadExample(2)">Обход аутентификации</button>
-      <button @click="loadExample(3)">Извлечение данных</button>
-    </div>
+    <div class="tasks-container">
+      <div v-for="(task, index) in tasks" :key="index" class="task-item" :class="{ active: activeTask === index }">
+        <div class="task-header" @click="toggleTask(index)">
+          <span class="task-number">Задание.{{ index + 1 }}</span>
+          <span class="task-title">{{ task.title }}</span>
+          <span class="task-arrow">{{ activeTask === index ? '▼' : '▶' }}</span>
+        </div>
 
-    <div class="safety-warning">
-      ⚠️ Это изолированная среда. Не пытайтесь использовать эти техники на реальных сайтах.
+        <div v-if="activeTask === index" class="task-content">
+          <div class="content-text" v-html="task.content"></div>
+
+          <div v-if="task.quiz" class="quiz-container" @click.stop>
+            <h3>Тест</h3>
+            <div v-for="(question, qIndex) in task.quiz.questions" :key="qIndex" class="question">
+              <p class="question-text">{{ question.text }}</p>
+              <div v-for="(option, oIndex) in question.options" :key="oIndex" class="option">
+                <input type="radio" :name="'question' + qIndex + '_' + index"
+                  :id="'q' + qIndex + 'o' + oIndex + '_' + index" :value="option"
+                  v-model="quizAnswers[index][qIndex]" />
+                <label :for="'q' + qIndex + 'o' + oIndex + '_' + index" class="option-label">
+                  {{ option }}
+                </label>
+              </div>
+            </div>
+            <p v-if="task.quiz.submitted" class="quiz-feedback"
+              :class="{ correct: task.quiz.correct, incorrect: !task.quiz.correct }">
+              {{
+                task.quiz.correct
+                  ? '✓ Правильно! Можете перейти к следующему заданию.'
+                  : '✗ Есть ошибки. Проверьте ответы и попробуйте снова.'
+              }}
+            </p>
+            <button class="btn submit-quiz" @click="submitQuiz(index)" :disabled="!isQuizComplete(index)">
+              Отправить
+            </button>
+
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      currentCommand: '',
-      logs: [],
-      vulnerableBackend: null
+<script setup>
+import { ref, onMounted } from 'vue'
+import { courseData } from '@/data/courseData'
+import NavBar from '@/components/layout/NavBar.vue'
+
+// Инициализация реактивных переменных
+const courseMeta = ref(courseData.meta)
+const progress = ref(courseData.meta.initialProgress)
+const activeTask = ref(null)
+const quizAnswers = ref({})
+const tasks = ref(
+  courseData.tasks.map((task) => ({
+    ...task,
+    quiz: task.quiz ? { ...task.quiz, submitted: false, correct: false } : null,
+  })),
+)
+
+// Загрузка сохраненного прогресса
+onMounted(() => {
+  tasks.value.forEach((task, index) => {
+    if (task.quiz && !quizAnswers.value[index]) {
+      quizAnswers.value[index] = {}
     }
-  },
-  mounted() {
-    this.logs.push('Добро пожаловать в лабораторию SQL-инъекций!');
-    this.logs.push('Введите SQL-запрос или выберите пример из списка.');
-    this.initializeBackend();
-  },
-  methods: {
-    async initializeBackend() {
-      // Здесь можно инициализировать подключение к изолированному бэкенду
-      // Например, через WebSocket или API
-      this.vulnerableBackend = {
-        users: [
-          {id: 1, login: 'admin', password: 'weakpass'},
-          {id: 2, login: 'user1', password: '123456'}
-        ]
-      };
-    },
-    executeCommand() {
-      if (!this.currentCommand.trim()) return;
+  })
 
-      this.logs.push(`> ${this.currentCommand}`);
+  const savedProgress = localStorage.getItem('sqlCourseProgress')
+  if (savedProgress) {
+    try {
+      const progressData = JSON.parse(savedProgress)
+      progress.value = progressData.progress || courseData.meta.initialProgress
+      activeTask.value = progressData.activeTask || null
+      quizAnswers.value = progressData.quizAnswers || {}
 
-      // Эмуляция уязвимого бэкенда
-      try {
-        const result = this.simulateVulnerableQuery(this.currentCommand);
-        this.logs.push(`Результат: ${JSON.stringify(result)}`);
-      } catch (error) {
-        this.logs.push(`Ошибка: ${error.message}`);
-      }
-
-      this.currentCommand = '';
-    },
-    simulateVulnerableQuery(query) {
-      // Очень упрощенная эмуляция SQL-инъекции
-      if (query.includes("' OR '1'='1")) {
-        return this.vulnerableBackend.users;
-      }
-
-      if (query.includes("SELECT * FROM users WHERE login =")) {
-        const login = query.match(/login = '([^']+)'/)?.[1];
-        return this.vulnerableBackend.users.filter(u => u.login === login);
-      }
-
-      return {message: "Неверный запрос", query};
-    },
-    loadExample(num) {
-      const examples = [
-        "",
-        "SELECT * FROM users WHERE login = 'admin' AND password = 'wrongpass'",
-        "SELECT * FROM users WHERE login = 'admin' OR '1'='1' --",
-        "SELECT * FROM users WHERE login = 'admin' UNION SELECT 1,table_name,3 FROM information_schema.tables --"
-      ];
-
-      this.currentCommand = examples[num];
-      this.logs.push(`Загружен пример #${num}`);
+      tasks.value.forEach((task, index) => {
+        if (task.quiz && quizAnswers.value[index]) {
+          const answers = Object.values(quizAnswers.value[index])
+          if (answers.length === task.quiz.questions.length) {
+            task.quiz.submitted = true
+            task.quiz.correct = task.quiz.questions.every((q, qIndex) => {
+              return answers[qIndex] === q.options[q.correctAnswer]
+            })
+          }
+        }
+      })
+    } catch (e) {
+      console.error('Error loading progress:', e)
     }
   }
+})
+
+// Методы компонента
+const toggleTask = (index) => {
+  activeTask.value = activeTask.value === index ? null : index
+  saveProgress()
+}
+
+const isQuizComplete = (index) => {
+  if (!tasks.value[index].quiz) return true
+  const answers = quizAnswers.value[index]
+  return answers && Object.keys(answers).length === tasks.value[index].quiz.questions.length
+}
+
+const submitQuiz = (index) => {
+  const task = tasks.value[index]
+  let allCorrect = true
+
+  task.quiz.questions.forEach((question, qIndex) => {
+    const userAnswer = quizAnswers.value[index][qIndex]
+    const correctAnswer = question.options[question.correctAnswer]
+    if (userAnswer !== correctAnswer) {
+      allCorrect = false
+    }
+  })
+
+  // Используем Object.assign для сохранения реактивности
+  tasks.value[index].quiz = Object.assign({}, tasks.value[index].quiz, {
+    submitted: true,
+    correct: allCorrect
+  })
+
+  // Обновляем прогресс
+  updateProgress()
+  // Сохраняем состояние
+  saveProgress()
+}
+
+const updateProgress = () => {
+  const totalTasksWithQuiz = tasks.value.filter((t) => t.quiz).length
+  const completedTasks = tasks.value.filter((t) => t.quiz && t.quiz.correct).length
+  progress.value = Math.round((completedTasks / totalTasksWithQuiz) * 100)
+}
+
+const saveProgress = () => {
+  const progressData = {
+    progress: progress.value,
+    activeTask: activeTask.value,
+    quizAnswers: quizAnswers.value,
+  }
+  localStorage.setItem('sqlCourseProgress', JSON.stringify(progressData))
 }
 </script>
 
-<style>
-.sql-lab {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: monospace;
-}
-
-.terminal {
-  background: #1e1e1e;
-  color: #f0f0f0;
-  padding: 15px;
-  border-radius: 5px;
-  height: 300px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-}
-
-.log-entry {
-  margin-bottom: 5px;
-  white-space: pre-wrap;
-}
-
-.input-line {
-  display: flex;
-  align-items: center;
-}
-
-.prompt {
-  margin-right: 10px;
-  color: #4CAF50;
-}
-
-input {
-  flex-grow: 1;
-  background: transparent;
-  border: none;
-  color: white;
-  font-family: monospace;
-  outline: none;
-}
-
-.tutorial-section {
-  margin: 20px 0;
-}
-
-button {
-  margin-right: 10px;
-  padding: 5px 10px;
-  background: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.safety-warning {
-  color: #ff9800;
-  margin-top: 20px;
-  font-weight: bold;
-}
+<style scoped>
+@import '@/assets/css/SQLInjectionn.css';
 </style>

@@ -38,5 +38,5 @@ export const useUserStore = defineStore('user', {
       }
     }
   },
-  persist: true // опционально: если хочешь сохранять в localStorage автоматически
+  persist: true // сохранять в localStorage автоматически
 })
