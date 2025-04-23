@@ -4,7 +4,7 @@
     <aside class="filter-sidebar">
       <h2>Фильтр</h2>
       <div class="filter-group">
-        <label>Категория:</label>
+        <label>Сложность:</label>
         <select v-model="selectedLevel">
           <option value="">Все</option>
           <option value="beginner">Начальный</option>

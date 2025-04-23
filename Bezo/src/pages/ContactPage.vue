@@ -10,7 +10,7 @@
     <section class="contact-content">
       <div class="contact-info">
         <h2>Контактная информация</h2>
-        <p><strong>Адрес:</strong> г. Москва, ул. Примерная, д. 12</p>
+        <p><strong>Адрес:</strong> г. Москва, ул. Пушкина, д. 666</p>
         <p><strong>Телефон:</strong> +7 (999) 123-45-67</p>
         <p><strong>Email:</strong> info@bezoschool.ru</p>
         <p><strong>Часы работы:</strong> Пн-Пт: 10:00–18:00</p>

@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="see-all">
-      <a href="#courses" class="btn-secondary">Посмотреть все курсы</a>
+      <router-link to="/courses"><a class="btn-secondary">Посмотреть все курсы</a></router-link>
     </div>
   </section>
 </template>

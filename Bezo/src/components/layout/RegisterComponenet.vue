@@ -59,14 +59,14 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await axios.post('http://localhost:5174/api/auth/register', {
-      username: formData.value.firstName,  // имя
-      email: formData.value.email,         // email
-      password: formData.value.password    // пароль
+      username: formData.value.firstName,
+      email: formData.value.email,
+      password: formData.value.password
     })
 
     // В случае успешной регистрации
     alert("Регистрация прошла успешно!")
-    console.log(response.data)  // Можно сохранить токен, если нужно
+    // console.log(response.data)
   } catch (error) {
     // Выводим детальную ошибку
     console.error("Ошибка регистрации:", error.response?.data || error.message)
