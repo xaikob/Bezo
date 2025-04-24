@@ -29,3 +29,7 @@ node --env-file=.env server.js
 ```sh
 rm -rf node_modules package-lock.json && npm install && npm run dev
 ```
+### Будущее развитие
+1. Расширить функционал
+2. Сделать полную привязку данных к Supabase
+3. Сделать адекватную эмуляцию для системных уязвимостей в VirtualBox
