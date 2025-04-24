@@ -118,6 +118,7 @@ router.post(
       
       if (error.code) {
         response.code = error.code
+        // Специфичные сообщения для известных кодов ошибок
         if (error.code === 'invalid_credentials') {
           response.message = 'Неверный email или пароль'
         }

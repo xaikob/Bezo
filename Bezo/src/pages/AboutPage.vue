@@ -1,7 +1,6 @@
 <template>
   <div class="about-page">
     <NavBar />
-    <!-- Hero-секция с фоном -->
     <section class="hero-section">
       <div class="hero-content">
         <h1>Добро пожаловать в школу информационной безопасности «Bezo»</h1>
@@ -11,15 +10,14 @@
       </div>
     </section>
 
-    <!-- Миссия -->
     <section class="section mission">
       <h2 class="section-title">Наша миссия</h2>
       <p class="section-text">
-        Мы стремимся создать сообщество, где каждый может получить доступ к современным знаниям по кибербезопасности и ИТ. Мы обучаем защищать цифровой мир.
+        Мы стремимся создать сообщество, где каждый может получить доступ к современным знаниям по
+        кибербезопасности и ИТ. Мы обучаем защищать цифровой мир.
       </p>
     </section>
 
-    <!-- Преимущества -->
     <section class="section features">
       <h2 class="section-title">Почему выбирают нас</h2>
       <div class="feature-cards">
@@ -46,7 +44,6 @@
       </div>
     </section>
 
-    <!-- Призыв к действию -->
     <section class="section cta">
       <h2 class="section-title">Готовы начать?</h2>
       <p>Присоединяйтесь к нашему сообществу и начните путь к профессии будущего.</p>
@@ -60,5 +57,5 @@ import NavBar from '@/components/layout/NavBar.vue'
 </script>
 
 <style scoped>
-@import "@/assets/css/AboutPage.css";
+@import '@/assets/css/AboutPage.css';
 </style>

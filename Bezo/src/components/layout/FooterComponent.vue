@@ -19,8 +19,7 @@
   </footer>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped>
 @import '@/assets/css/FooterComponent.css';

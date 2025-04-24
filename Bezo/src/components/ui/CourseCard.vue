@@ -2,7 +2,9 @@
   <div class="course-card">
     <h3>{{ course.title }}</h3>
     <p><strong>Автор:</strong> {{ course.author }}</p>
-    <p><strong>Оценка:</strong> <span class="stars">{{ stars }}</span></p>
+    <p>
+      <strong>Оценка:</strong> <span class="stars">{{ stars }}</span>
+    </p>
     <p><strong>Продолжительность:</strong> {{ course.duration }}</p>
   </div>
 </template>
@@ -11,11 +13,12 @@
 const props = defineProps({
   course: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 
-const stars = '★'.repeat(Math.round(props.course.rating)) + '☆'.repeat(5 - Math.round(props.course.rating))
+const stars =
+  '★'.repeat(Math.round(props.course.rating)) + '☆'.repeat(5 - Math.round(props.course.rating))
 </script>
 
 <style scoped>
@@ -37,7 +40,7 @@ const stars = '★'.repeat(Math.round(props.course.rating)) + '☆'.repeat(5 - M
 }
 
 .stars {
-  color: #fbbf24; /* жёлтые звезды */
+  color: #fbbf24;
   font-size: 16px;
 }
 </style>

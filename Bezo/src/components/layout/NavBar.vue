@@ -10,7 +10,11 @@
         <li><router-link to="/about">О школе</router-link></li>
         <li><router-link to="/courses">Курсы</router-link></li>
         <li><router-link to="/contact">Контакты</router-link></li>
-        <li><router-link :to="userStore.isLoggedIn ? '/user' : '/registrate'"><img class="userLogo" src="/src/assets/img/userAvatar.svg" alt="User" /></router-link></li>
+        <li>
+          <router-link :to="userStore.isLoggedIn ? '/user' : '/registrate'">
+            <img class="userLogo" src="/src/assets/img/userAvatar.svg" alt="User" />
+          </router-link>
+        </li>
         <button v-if="userStore.isLoggedIn" @click="logout">Выйти</button>
       </ul>
     </nav>

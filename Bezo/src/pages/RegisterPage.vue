@@ -65,8 +65,6 @@ import axios from 'axios'
 import NavBar from '@/components/layout/NavBar.vue'
 import { useRouter } from 'vue-router'
 
-
-
 const router = useRouter()
 
 const formData = ref({
@@ -78,30 +76,29 @@ const formData = ref({
 })
 
 const handleSubmit = async (e) => {
-  e.preventDefault();
+  e.preventDefault()
 
   if (formData.value.password !== formData.value.confirmPassword) {
-    alert("Пароли не совпадают!");
-    return;
+    alert('Пароли не совпадают!')
+    return
   }
 
   try {
-    // Убираем объявление response, если не используем его
     await axios.post('http://localhost:5174/api/auth/register', {
       email: formData.value.email,
       password: formData.value.password,
       username: formData.value.firstName,
-      lastName: formData.value.lastName
-    });
+      lastName: formData.value.lastName,
+    })
 
-    alert("Регистрация прошла успешно!");
+    alert('Регистрация прошла успешно!')
     // Перенаправляем на страницу входа после успешной регистрации
-    router.push('/login');
+    router.push('/login')
   } catch (error) {
-    console.error("Ошибка регистрации:", error.response?.data || error.message);
-    alert("Ошибка: " + (error.response?.data?.error || error.message));
+    console.error('Ошибка регистрации:', error.response?.data || error.message)
+    alert('Ошибка: ' + (error.response?.data?.error || error.message))
   }
-};
+}
 </script>
 
 <style scoped>

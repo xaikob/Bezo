@@ -16,7 +16,12 @@
     </div>
 
     <div class="tasks-container">
-      <div v-for="(task, index) in tasks" :key="index" class="task-item" :class="{ active: activeTask === index }">
+      <div
+        v-for="(task, index) in tasks"
+        :key="index"
+        class="task-item"
+        :class="{ active: activeTask === index }"
+      >
         <div class="task-header" @click="toggleTask(index)">
           <span class="task-number">Задание.{{ index + 1 }}</span>
           <span class="task-title">{{ task.title }}</span>
@@ -31,26 +36,36 @@
             <div v-for="(question, qIndex) in task.quiz.questions" :key="qIndex" class="question">
               <p class="question-text">{{ question.text }}</p>
               <div v-for="(option, oIndex) in question.options" :key="oIndex" class="option">
-                <input type="radio" :name="'question' + qIndex + '_' + index"
-                  :id="'q' + qIndex + 'o' + oIndex + '_' + index" :value="option"
-                  v-model="quizAnswers[index][qIndex]" />
+                <input
+                  type="radio"
+                  :name="'question' + qIndex + '_' + index"
+                  :id="'q' + qIndex + 'o' + oIndex + '_' + index"
+                  :value="option"
+                  v-model="quizAnswers[index][qIndex]"
+                />
                 <label :for="'q' + qIndex + 'o' + oIndex + '_' + index" class="option-label">
                   {{ option }}
                 </label>
               </div>
             </div>
-            <p v-if="task.quiz.submitted" class="quiz-feedback"
-              :class="{ correct: task.quiz.correct, incorrect: !task.quiz.correct }">
+            <p
+              v-if="task.quiz.submitted"
+              class="quiz-feedback"
+              :class="{ correct: task.quiz.correct, incorrect: !task.quiz.correct }"
+            >
               {{
                 task.quiz.correct
                   ? '✓ Правильно! Можете перейти к следующему заданию.'
                   : '✗ Есть ошибки. Проверьте ответы и попробуйте снова.'
               }}
             </p>
-            <button class="btn submit-quiz" @click="submitQuiz(index)" :disabled="!isQuizComplete(index)">
+            <button
+              class="btn submit-quiz"
+              @click="submitQuiz(index)"
+              :disabled="!isQuizComplete(index)"
+            >
               Отправить
             </button>
-
           </div>
         </div>
       </div>
@@ -135,7 +150,7 @@ const submitQuiz = (index) => {
   // Используем Object.assign для сохранения реактивности
   tasks.value[index].quiz = Object.assign({}, tasks.value[index].quiz, {
     submitted: true,
-    correct: allCorrect
+    correct: allCorrect,
   })
 
   // Обновляем прогресс

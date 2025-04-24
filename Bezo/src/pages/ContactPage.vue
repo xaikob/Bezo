@@ -38,7 +38,9 @@
           {{ loading ? 'Отправка...' : 'Отправить' }}
         </button>
 
-        <p v-if="submitted" class="success-message">Спасибо! Мы свяжемся с вами в ближайшее время.</p>
+        <p v-if="submitted" class="success-message">
+          Спасибо! Мы свяжемся с вами в ближайшее время.
+        </p>
       </form>
     </section>
   </div>
@@ -51,7 +53,7 @@ import NavBar from '@/components/layout/NavBar.vue'
 const form = ref({
   name: '',
   email: '',
-  message: ''
+  message: '',
 })
 
 const loading = ref(false)
@@ -60,11 +62,11 @@ const submitted = ref(false)
 const handleSubmit = async () => {
   loading.value = true
   try {
-    // Это можно заменить на отправку в Supabase, EmailJS, Formspree, Telegram и т.д.
+    // Это можно заменить на отправку в Supabase
     await fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
       body: JSON.stringify(form.value),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     })
 
     submitted.value = true
@@ -79,5 +81,5 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-@import "@/assets/css/ContactPage.css";
+@import '@/assets/css/ContactPage.css';
 </style>

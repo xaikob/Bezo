@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 import cors from 'cors'
 import { createClient } from '@supabase/supabase-js'
 import authRoutes from './routes/authRoutes.js'
+import courseRoutes from './routes/courseRoutes.js'
 
 
 // Скрываем ошибку старости
@@ -50,6 +51,7 @@ app.use(cors({
 
 app.use(express.json())
 app.use('/api/auth', authRoutes)
+app.use('/api/courses', courseRoutes)
 
 // Логирование всех входящих запросов
 app.use((req, res, next) => {
@@ -60,41 +62,6 @@ app.use((req, res, next) => {
 // Тестовый маршрут
 app.get('/api/hello', (req, res) => {
   res.json({ message: 'Сервер работает!' })
-})
-
-// Роут для курсов
-app.get('/api/courses', async (req, res) => {
-  console.log('Запрос к /api/courses начал обработку')
-  
-  try {
-    const { data, error } = await supabase
-      .from('courses')
-      .select('*')
-      .limit(10)
-
-    console.log('Результат запроса к Supabase:', { data, error })
-
-    if (error) {
-      console.error('Ошибка Supabase:', error)
-      return res.status(500).json({ 
-        error: 'Database Error',
-        details: error.message 
-      })
-    }
-
-    if (!data || data.length === 0) {
-      console.warn('Получен пустой массив курсов')
-      return res.status(200).json([])
-    }
-
-    res.json(data)
-  } catch (err) {
-    console.error('Неожиданная ошибка:', err)
-    res.status(500).json({ 
-      error: 'Internal Server Error',
-      details: err.message 
-    })
-  }
 })
 
 // Получить курсы пользователя

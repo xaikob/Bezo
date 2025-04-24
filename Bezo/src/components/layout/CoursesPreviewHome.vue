@@ -23,25 +23,26 @@ import { ref } from 'vue'
 const courses = ref([
   {
     id: 1,
-    name: "Основы информационной безопасности",
-    description: "Познакомьтесь с основами защиты информации в этом курсе.",
-    image: "/src/assets/img/courseOne.png",
-    link: "#course1"
+    name: 'Основы информационной безопасности',
+    description: 'Познакомьтесь с основами защиты информации в этом курсе.',
+    image: '/src/assets/img/courseOne.png',
+    link: '#course1',
   },
   {
     id: 2,
-    name: "Этика и правовые вопросы в информационной безопасности",
-    description: "Изучите юридические аспекты и этические вопросы в сфере информационной безопасности.",
-    image: "/src/assets/img/courseTwo.png",
-    link: "#course2"
+    name: 'Этика и правовые вопросы в информационной безопасности',
+    description:
+      'Изучите юридические аспекты и этические вопросы в сфере информационной безопасности.',
+    image: '/src/assets/img/courseTwo.png',
+    link: '#course2',
   },
   {
     id: 3,
-    name: "Практика взлома и защиты систем",
-    description: "Погрузитесь в мир этичного хакинга и защиты от атак.",
-    image: "/src/assets/img/courseThre.png",
-    link: "#course3"
-  }
+    name: 'Практика взлома и защиты систем',
+    description: 'Погрузитесь в мир этичного хакинга и защиты от атак.',
+    image: '/src/assets/img/courseThre.png',
+    link: '#course3',
+  },
 ])
 </script>
 

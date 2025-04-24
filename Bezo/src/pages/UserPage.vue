@@ -29,8 +29,6 @@ const userStore = useUserStore()
 const userName = userStore.username
 const userId = userStore.userId
 
-
-
 const courses = ref([])
 const loading = ref(true)
 
@@ -46,8 +44,6 @@ const fetchUserCourses = async () => {
 }
 
 const continueCourse = (courseId) => {
-  // Можно перейти на страницу конкретного курса
-  // Например, /courses/123
   window.location.href = `/courses/${courseId}`
 }
 
@@ -72,7 +68,7 @@ onMounted(fetchUserCourses)
   background: #f7f7f7;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 0.8rem;

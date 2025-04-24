@@ -66,16 +66,22 @@ const fetchCourses = async () => {
   }
 }
 
-// Фильтрация курсов (оставляем без изменений)
+// Фильтрация курсов
 const filteredCourses = computed(() => {
-  return courses.value.filter(course => {
+  return courses.value.filter((course) => {
     const levelMatch = !selectedLevel.value || course.level === selectedLevel.value
     const hours = parseFloat(course.duration) || 0
     let durationMatch = true
     switch (selectedDuration.value) {
-      case 'short': durationMatch = hours <= 2; break
-      case 'medium': durationMatch = hours > 2 && hours <= 5; break
-      case 'long': durationMatch = hours > 5; break
+      case 'short':
+        durationMatch = hours <= 2
+        break
+      case 'medium':
+        durationMatch = hours > 2 && hours <= 5
+        break
+      case 'long':
+        durationMatch = hours > 5
+        break
     }
     return levelMatch && durationMatch
   })

@@ -2,15 +2,15 @@
   <NavBar />
   <div class="formCard">
     <form class="form" @submit="handleSubmit">
-      <p class="title">Войти </p>
-      <p class="message">Снова рады вас видеть. </p>
+      <p class="title">Войти</p>
+      <p class="message">Снова рады вас видеть.</p>
       <label>
-        <input v-model="email" required="true" placeholder="" type="email" class="input">
+        <input v-model="email" required="true" placeholder="" type="email" class="input" />
         <span>Email</span>
       </label>
 
       <label>
-        <input v-model="password" required="true" placeholder="" type="password" class="input">
+        <input v-model="password" required="true" placeholder="" type="password" class="input" />
         <span>Пароль...</span>
       </label>
       <button type="submit" class="submit">Войти</button>
@@ -37,7 +37,7 @@ const handleSubmit = async (e) => {
   try {
     const res = await axios.post('http://localhost:5174/api/auth/login', {
       email: email.value,
-      password: password.value
+      password: password.value,
     })
 
     const { user, token } = res.data
@@ -45,7 +45,7 @@ const handleSubmit = async (e) => {
     if (user && token) {
       userStore.setUser({
         userId: user.id,
-        username: user.first_name || user.email.split('@')[0]
+        username: user.first_name || user.email.split('@')[0],
       })
       localStorage.setItem('token', token) // Сохраняем токен
       router.push('/user')
@@ -58,7 +58,6 @@ const handleSubmit = async (e) => {
   }
 }
 </script>
-
 
 <style scoped>
 @import '@/assets/css/LoginComponenet.css';

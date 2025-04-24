@@ -1,4 +1,5 @@
 <template>
+  <NavBar />
   <div class="sql-lab">
     <h2>Лаборатория SQL-инъекций</h2>
 
@@ -29,72 +30,68 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      currentCommand: '',
-      logs: [],
-      vulnerableBackend: null
-    }
-  },
-  mounted() {
-    this.logs.push('Добро пожаловать в лабораторию SQL-инъекций!');
-    this.logs.push('Введите SQL-запрос или выберите пример из списка.');
-    this.initializeBackend();
-  },
-  methods: {
-    async initializeBackend() {
-      // Здесь можно инициализировать подключение к изолированному бэкенду
-      // Например, через WebSocket или API
-      this.vulnerableBackend = {
-        users: [
-          {id: 1, login: 'admin', password: 'weakpass'},
-          {id: 2, login: 'user1', password: '123456'}
-        ]
-      };
-    },
-    executeCommand() {
-      if (!this.currentCommand.trim()) return;
+<script setup>
+import { ref, onMounted } from 'vue'
+import NavBar from '@/components/layout/NavBar.vue'
 
-      this.logs.push(`> ${this.currentCommand}`);
+const currentCommand = ref('')
+const logs = ref([])
+const vulnerableBackend = ref(null)
 
-      // Эмуляция уязвимого бэкенда
-      try {
-        const result = this.simulateVulnerableQuery(this.currentCommand);
-        this.logs.push(`Результат: ${JSON.stringify(result)}`);
-      } catch (error) {
-        this.logs.push(`Ошибка: ${error.message}`);
-      }
-
-      this.currentCommand = '';
-    },
-    simulateVulnerableQuery(query) {
-      // Очень упрощенная эмуляция SQL-инъекции
-      if (query.includes("' OR '1'='1")) {
-        return this.vulnerableBackend.users;
-      }
-
-      if (query.includes("SELECT * FROM users WHERE login =")) {
-        const login = query.match(/login = '([^']+)'/)?.[1];
-        return this.vulnerableBackend.users.filter(u => u.login === login);
-      }
-
-      return {message: "Неверный запрос", query};
-    },
-    loadExample(num) {
-      const examples = [
-        "",
-        "SELECT * FROM users WHERE login = 'admin' AND password = 'wrongpass'",
-        "SELECT * FROM users WHERE login = 'admin' OR '1'='1' --",
-        "SELECT * FROM users WHERE login = 'admin' UNION SELECT 1,table_name,3 FROM information_schema.tables --"
-      ];
-
-      this.currentCommand = examples[num];
-      this.logs.push(`Загружен пример #${num}`);
-    }
+const initializeBackend = () => {
+  vulnerableBackend.value = {
+    users: [
+      { id: 1, login: 'admin', password: 'weakpass' },
+      { id: 2, login: 'user1', password: '123456' },
+    ],
   }
 }
+
+const simulateVulnerableQuery = (query) => {
+  if (query.includes("' OR '1'='1")) {
+    return vulnerableBackend.value.users
+  }
+
+  if (query.includes('SELECT * FROM users WHERE login =')) {
+    const login = query.match(/login = '([^']+)'/)?.[1]
+    return vulnerableBackend.value.users.filter((u) => u.login === login)
+  }
+
+  return { message: 'Неверный запрос', query }
+}
+
+const executeCommand = () => {
+  if (!currentCommand.value.trim()) return
+
+  logs.value.push(`> ${currentCommand.value}`)
+
+  try {
+    const result = simulateVulnerableQuery(currentCommand.value)
+    logs.value.push(`Результат: ${JSON.stringify(result)}`)
+  } catch (error) {
+    logs.value.push(`Ошибка: ${error.message}`)
+  }
+
+  currentCommand.value = ''
+}
+
+const loadExample = (num) => {
+  const examples = [
+    '',
+    "SELECT * FROM users WHERE login = 'admin' AND password = 'wrongpass'",
+    "SELECT * FROM users WHERE login = 'admin' OR '1'='1' --",
+    "SELECT * FROM users WHERE login = 'admin' UNION SELECT 1,table_name,3 FROM information_schema.tables --",
+  ]
+
+  currentCommand.value = examples[num]
+  logs.value.push(`Загружен пример #${num}`)
+}
+
+onMounted(() => {
+  logs.value.push('Добро пожаловать в лабораторию SQL-инъекций!')
+  logs.value.push('Введите SQL-запрос или выберите пример из списка.')
+  initializeBackend()
+})
 </script>
 
 <style scoped>
