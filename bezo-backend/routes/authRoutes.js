@@ -11,7 +11,7 @@ const router = express.Router()
 // Регистрация пользователя
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, username, lastName } = req.body;  // Добавлено lastName
+    const { email, password, username, lastName } = req.body;
 
     // Регистрация в Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
         id: authData.user.id,
         email: authData.user.email,
         first_name: username,
-        last_name: lastName  // Добавляем фамилию
+        last_name: lastName
       }])
       .select();
 
@@ -82,7 +82,6 @@ router.post(
 
       if (profileError || !userProfile) {
         console.warn(`Пользователь ${data.user.id} не найден в public.users`)
-        // Можно создать запись здесь или отправить ошибку
         return res.status(404).json({
           message: 'Профиль пользователя не найден',
           details: 'Пользователь аутентифицирован, но отсутствует в базе данных'
@@ -111,7 +110,7 @@ router.post(
     } catch (error) {
       console.error('Ошибка входа:', error)
       
-      // Детализированные ошибки для разных случаев
+      // Детализированные ошибки
       const response = {
         message: 'Ошибка аутентификации',
         details: error.message
@@ -119,7 +118,6 @@ router.post(
       
       if (error.code) {
         response.code = error.code
-        // Специфичные сообщения для известных кодов ошибок
         if (error.code === 'invalid_credentials') {
           response.message = 'Неверный email или пароль'
         }

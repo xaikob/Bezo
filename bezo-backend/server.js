@@ -4,19 +4,19 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import cors from 'cors'
 import { createClient } from '@supabase/supabase-js'
-import authRoutes from './routes/authRoutes.js' // путь укажи корректный по структуре
+import authRoutes from './routes/authRoutes.js'
 
 
 // Скрываем ошибку старости
-process.env.UV_THREADPOOL_SIZE = 128; // Увеличивает пул потоков
-process.removeAllListeners('warning'); // Скрывает предупреждения
+process.env.UV_THREADPOOL_SIZE = 128;
+process.removeAllListeners('warning');
 
 // Конфигурация .env
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 dotenv.config({ path: path.join(__dirname, '.env') })
 
-// Явная проверка переменных окружения
+// Проверка переменных окружения
 console.log('=== Проверка окружения ===')
 console.log('Supabase URL:', process.env.SUPABASE_URL || '❌ Отсутствует')
 console.log('Supabase Key:', process.env.SUPABASE_KEY ? '✔️ (скрыто)' : '❌ Отсутствует')
@@ -62,7 +62,7 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Сервер работает!' })
 })
 
-// Роут для курсов (упрощённая версия)
+// Роут для курсов
 app.get('/api/courses', async (req, res) => {
   console.log('Запрос к /api/courses начал обработку')
   
