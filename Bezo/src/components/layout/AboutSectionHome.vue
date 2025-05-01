@@ -23,12 +23,14 @@
       </div>
     </div>
     <div class="about-image">
-      <img src="/src/assets/img/aboutImage.png" alt="Преподавание информационной безопасности" />
+      <img :src="aboutImage" alt="Преподавание информационной безопасности" />
     </div>
   </section>
 </template>
 
-<script setup></script>
+<script setup>
+import aboutImage from '@/assets/img/aboutImage.png'
+</script>
 
 <style scoped>
 @import '@/assets/css/AboutSectionHome.css';

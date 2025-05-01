@@ -122,7 +122,7 @@ app.use((req, res) => {
 })
 
 // Запуск сервера
-const PORT = process.env.PORT || 5174
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(`\n🚀 Сервер запущен на http://localhost:${PORT}`)
   console.log('Доступные маршруты:')

@@ -12,12 +12,14 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="/src/assets/img/heroImage.png" alt="Школа информационной безопасности" />
+      <img :src="heroImage" alt="Школа информационной безопасности" />
     </div>
   </section>
 </template>
 
-<script setup></script>
+<script setup>
+import heroImage from '@/assets/img/heroImage.png'
+</script>
 
 <style scoped>
 @import '@/assets/css/HeroSectionHome.css';

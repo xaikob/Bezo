@@ -50,7 +50,7 @@ const fetchCourses = async () => {
     isLoading.value = true
     error.value = null
 
-    const response = await fetch('http://localhost:5174/api/courses')
+    const response = await fetch('/api/courses')
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)

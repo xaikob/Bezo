@@ -35,6 +35,9 @@
 </template>
 
 <script setup>
+import review1 from '@/assets/img/review/review1.png'
+import review2 from '@/assets/img/review/review2.png'
+
 import { ref } from 'vue'
 
 const reviews = [
@@ -44,7 +47,7 @@ const reviews = [
     comment:
       'Отличные курсы! Материал подается структурированно, всегда готовы помочь. Особенно понравились практические задания.',
     rating: 5,
-    avatar: './src/assets/img/review/review1.png',
+    avatar: review1,
   },
   {
     name: 'Мария Иванова',
@@ -52,7 +55,7 @@ const reviews = [
     comment:
       'Прошла курс по этичному хакингу. Получила много практических навыков, которые сразу применила на работе. Рекомендую!',
     rating: 4,
-    avatar: './src/assets/img/review/review2.png',
+    avatar: review2,
   },
   {
     name: 'Дмитрий Смирнов',
@@ -60,7 +63,7 @@ const reviews = [
     comment:
       'Хорошая подача материала, но хотелось бы больше практики. В целом остался доволен обучением.',
     rating: 4,
-    avatar: './src/assets/img/review/review1.png',
+    avatar: review1,
   },
   {
     name: 'Елена Козлова',
@@ -68,7 +71,7 @@ const reviews = [
     comment:
       'Лучшие курсы по информационной безопасности, которые я встречала. Особенно ценю индивидуальный подход к каждому студенту.',
     rating: 5,
-    avatar: './src/assets/img/review/review1.png',
+    avatar: review2,
   },
 ]
 

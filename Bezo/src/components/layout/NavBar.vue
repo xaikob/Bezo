@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="logo" @click="$router.push('/')">
-      <img class="logo_img" src="/src/assets/img/logo.svg" alt="Logo" />
+      <img class="logo_img" :src="logo" alt="Logo" />
       <span>Bezo</span>
     </div>
 
@@ -12,7 +12,7 @@
         <li><router-link to="/contact">Контакты</router-link></li>
         <li>
           <router-link :to="userStore.isLoggedIn ? '/user' : '/registrate'">
-            <img class="userLogo" src="/src/assets/img/userAvatar.svg" alt="User" />
+            <img class="userLogo" :src="userAvatar" alt="User" />
           </router-link>
         </li>
         <button v-if="userStore.isLoggedIn" @click="logout">Выйти</button>
@@ -37,6 +37,9 @@
 </template>
 
 <script setup>
+import userAvatar from '@/assets/img/userAvatar.svg'
+import logo from '@/assets/img/logo.svg'
+
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'

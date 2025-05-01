@@ -34,7 +34,7 @@ const loading = ref(true)
 
 const fetchUserCourses = async () => {
   try {
-    const response = await axios.get(`http://localhost:5174/api/user-courses/${userId}`)
+    const response = await axios.get(`/api/user-courses/${userId}`)
     courses.value = response.data
   } catch (err) {
     console.error('Ошибка при загрузке курсов:', err)

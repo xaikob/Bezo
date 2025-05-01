@@ -84,7 +84,7 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    await axios.post('http://localhost:5174/api/auth/register', {
+    await axios.post('/api/auth/register', {
       email: formData.value.email,
       password: formData.value.password,
       username: formData.value.firstName,

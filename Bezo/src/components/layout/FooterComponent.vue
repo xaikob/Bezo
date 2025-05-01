@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-left">
-        <img src="/src/assets/img/logo.svg" alt="Logo" class="footer-logo" />
+        <img :src="logo" alt="Logo" class="footer-logo" />
         <p>&copy; 2025 Школа информационной безопасности. Все права не защищены.</p>
       </div>
       <div class="footer-right">
@@ -19,7 +19,9 @@
   </footer>
 </template>
 
-<script setup></script>
+<script setup>
+import logo from '@/assets/img/logo.svg'
+</script>
 
 <style scoped>
 @import '@/assets/css/FooterComponent.css';
